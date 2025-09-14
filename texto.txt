@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ban Hub - Futuristic</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+```
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Orbitron', monospace;
+        background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* Partículas de fondo */
+    body::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            radial-gradient(2px 2px at 20px 30px, #00ff88, transparent),
+            radial-gradient(2px 2px at 40px 70px, #ff0080, transparent),
+            radial-gradient(1px 1px at 90px 40px, #0080ff, transparent),
+            radial-gradient(1px 1px at 130px 80px, #ff8000, transparent);
+        animation: sparkle 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes sparkle {
+        0% { opacity: 0.3; }
+        100% { opacity: 0.8; }
+    }
+
+    .toggle-button {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(45deg, #ff0080, #8000ff);
+        color: white;
+        border: 2px solid #00ff88;
+        padding: 15px 25px;
+        border-radius: 0;
+        cursor: pointer;
+        font-weight: 900;
+        font-size: 14px;
+        font-family: 'Orbitron', monospace;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        box-shadow: 
+            0 0 20px rgba(255, 0, 128, 0.5),
+            inset 0 0 20px rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        z-index: 1001;
+        clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 100%, 15px 100%);
+    }
+
+    .toggle-button:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 
+            0 0 30px rgba(255, 0, 128, 0.8),
+            0 0 50px rgba(128, 0, 255, 0.3);
+        border-color: #ff0080;
+    }
+
+    .hub-container {
+        width: 600px;
+        height: 400px;
+        background: linear-gradient(135deg, #1a1a2e 0%, #0f0f23 100%);
+        border: 3px solid #00ff88;
+        position: relative;
+        transform: translateY(-100vh);
+        transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        box-shadow: 
+            0 0 50px rgba(0, 255, 136, 0.3),
+            inset 0 0 50px rgba(255, 255, 255, 0.05);
+        clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px));
+    }
+
+    .hub-container.show {
+        transform: translateY(0);
+    }
+
+    .hub-container::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, #00ff88, #ff0080, #8000ff, #00ff88);
+        z-index: -1;
+        border-radius: inherit;
+        animation: borderGlow 3s linear infinite;
+    }
+
+    @keyframes borderGlow {
+        0%, 100% { opacity: 0.8; }
+        50% { opacity: 1; }
+    }
+
+    .hub-header {
+        background: linear-gradient(135deg, #ff0080, #8000ff);
+        height: 60px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 100%, 25px 100%);
+    }
+
+    .hub-title {
+        color: white;
+        font-size: 28px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        text-shadow: 
+            0 0 10px rgba(255, 255, 255, 0.8),
+            0 0 20px rgba(255, 0, 128, 0.5);
+        animation: titlePulse 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes titlePulse {
+        0% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 0, 128, 0.5); }
+        100% { text-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 0, 128, 0.8); }
+    }
+
+    .close-button {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        background: none;
+        border: 2px solid #ff0080;
+        color: #ff0080;
+        font-size: 20px;
+        cursor: pointer;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        font-weight: bold;
+        clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);
+    }
+
+    .close-button:hover {
+        background: #ff0080;
+        color: white;
+        box-shadow: 0 0 15px rgba(255, 0, 128, 0.6);
+        transform: rotate(90deg);
+    }
+
+    .sidebar {
+        position: absolute;
+        left: 0;
+        top: 60px;
+        bottom: 0;
+        width: 150px;
+        background: linear-gradient(180deg, #0f0f23 0%, #1a1a2e 100%);
+        border-right: 2px solid #00ff88;
+        padding: 20px 0;
+    }
+
+    .main-content {
+        position: absolute;
+        left: 150px;
+        top: 60px;
+        right: 0;
+        bottom: 0;
+        padding: 30px;
+        background: linear-gradient(135deg, #16213e 0%, #0f0f23 100%);
+    }
+
+    .script-button {
+        display: block;
+        width: 120px;
+        margin: 10px auto;
+        background: linear-gradient(45deg, #00ff88, #00cc6a);
+        color: #0f0f23;
+        border: none;
+        padding: 12px 8px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 11px;
+        font-family: 'Orbitron', monospace;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        clip-path: polygon(10% 0%, 90% 0%, 100% 30%, 100% 70%, 90% 100%, 10% 100%, 0% 70%, 0% 30%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .script-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        transition: left 0.5s;
+    }
+
+    .script-button:hover::before {
+        left: 100%;
+    }
+
+    .script-button:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+        background: linear-gradient(45deg, #ff0080, #8000ff);
+        color: white;
+    }
+
+    .version-display {
+        background: linear-gradient(45deg, #1a1a2e, #16213e);
+        border: 1px solid #00ff88;
+        padding: 15px;
+        margin-bottom: 20px;
+        clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
+        position: relative;
+    }
+
+    .status-line {
+        display: flex;
+        align-items: center;
+        color: #00ff88;
+        font-size: 12px;
+        margin-bottom: 8px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        background: #00ff88;
+        margin-right: 10px;
+        animation: statusPulse 1.5s ease-in-out infinite;
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+
+    @keyframes statusPulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(1.2); }
+    }
+
+    .feature-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .feature-card {
+        background: linear-gradient(45deg, #1a1a2e, #0f0f23);
+        border: 1px solid #ff0080;
+        padding: 10px;
+        text-align: center;
+        color: #ff0080;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    }
+
+    .feature-card:hover {
+        background: linear-gradient(45deg, #ff0080, #8000ff);
+        color: white;
+        box-shadow: 0 0 15px rgba(255, 0, 128, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 999;
+    }
+
+    .overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+</style>
+```
+
+</head>
+<body>
+    <button class="toggle-button" onclick="toggleHub()">🚫 BAN-HUB</button>
+
+```
+<div class="overlay" id="overlay" onclick="closeHub()"></div>
+
+<div class="hub-container" id="hubContainer">
+    <div class="hub-header">
+        <h1 class="hub-title">🚫 BAN-HUB</h1>
+        <button class="close-button" onclick="closeHub()">×</button>
+    </div>
+
+    <div class="sidebar">
+        <button class="script-button" onclick="activateFlyB()">✈️ FLY V3</button>
+        <button class="script-button" onclick="showNotification('🔧 Próximamente...', 'info')">⚡ SPEED</button>
+        <button class="script-button" onclick="showNotification('🛡️ Próximamente...', 'info')">🛡️ NOCLIP</button>
+        <button class="script-button" onclick="showNotification('👻 Próximamente...', 'info')">👻 INVIS</button>
+        <button class="script-button" onclick="showNotification('🔥 Próximamente...', 'info')">🔥 ESP</button>
+    </div>
+
+    <div class="main-content">
+        <div class="version-display">
+            <div class="status-line">
+                <div class="status-dot"></div>
+                SISTEMA ACTIVO - V2.1.0
+            </div>
+            <div style="color: #8000ff; font-size: 11px; font-weight: 400;">
+                CONEXIÓN ESTABLECIDA | BYPASS ACTIVADO
+            </div>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">ANTI-BAN</div>
+            <div class="feature-card">SERVER HOP</div>
+            <div class="feature-card">AUTO REJOIN</div>
+            <div class="feature-card">KICK PROTECT</div>
+            <div class="feature-card">BYPASS DETECT</div>
+            <div class="feature-card">SAFE MODE</div>
+        </div>
+
+        <div style="margin-top: 20px; padding: 10px; background: linear-gradient(45deg, #ff0080, #8000ff); color: white; font-size: 10px; text-align: center; font-weight: 700; text-transform: uppercase; clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));">
+            ⚠️ USO BAJO TU RESPONSABILIDAD ⚠️
+        </div>
+    </div>
+</div>
+
+<script>
+    let isOpen = false;
+
+    function toggleHub() {
+        if (isOpen) {
+            closeHub();
+        } else {
+            openHub();
+        }
+    }
+
+    function openHub() {
+        const container = document.getElementById('hubContainer');
+        const overlay = document.getElementById('overlay');
+        
+        container.classList.add('show');
+        overlay.classList.add('show');
+        isOpen = true;
+    }
+
+    function closeHub() {
+        const container = document.getElementById('hubContainer');
+        const overlay = document.getElementById('overlay');
+        
+        container.classList.remove('show');
+        overlay.classList.remove('show');
+        isOpen = false;
+    }
+
+    // Función para activar Fly B
+    function activateFlyB() {
+        try {
+            showNotification('✈️ Cargando Fly V3...', 'info');
+            
+            const flyScript = `loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-V3-48359"))()`;
+            
+            navigator.clipboard.writeText(flyScript).then(() => {
+                showNotification('📋 Script copiado al portapapeles!', 'success');
+            }).catch(() => {
+                showNotification('❌ Error al copiar script', 'error');
+            });
+            
+            const button = document.querySelector('.script-button');
+            const originalText = button.innerHTML;
+            button.innerHTML = '✅ LISTO';
+            button.style.background = 'linear-gradient(45deg, #00ff88, #00cc6a)';
+            
+            console.log('Fly V3 Script:', flyScript);
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = 'linear-gradient(45deg, #00ff88, #00cc6a)';
+            }, 2000);
+            
+        } catch (error) {
+            showNotification('❌ Error al cargar Fly V3', 'error');
+            console.error('Error:', error);
+        }
+    }
+
+    // Función para mostrar notificaciones
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        let bgColor;
+        
+        switch(type) {
+            case 'success':
+                bgColor = 'linear-gradient(45deg, #00ff88, #00cc6a)';
+                break;
+            case 'error':
+                bgColor = 'linear-gradient(45deg, #ff0080, #cc0066)';
+                break;
+            default:
+                bgColor = 'linear-gradient(45deg, #8000ff, #6600cc)';
+        }
+        
+        notification.style.cssText = `
+            position: fixed;
+            top: 100px;
+            left: 20px;
+            background: ${bgColor};
+            color: white;
+            padding: 15px 25px;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 12px;
+            z-index: 1002;
+            transform: translateX(-400px);
+            transition: transform 0.4s ease;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        `;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+        }, 100);
+        
+        setTimeout(() => {
+            notification.style.transform = 'translateX(-400px)';
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 400);
+        }, 3000);
+    }
+
+    // Cerrar con tecla ESC
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && isOpen) {
+            closeHub();
+        }
+    });
+</script>
+```
+
+</body>
+</html>
